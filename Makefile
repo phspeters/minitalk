@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/10/27 16:05:00 by pehenri2          #+#    #+#              #
-#    Updated: 2023/12/02 09:26:52 by pehenri2         ###   ########.fr        #
+#    Created: 2023/12/02 09:58:30 by pehenri2          #+#    #+#              #
+#    Updated: 2023/12/02 09:58:35 by pehenri2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ EXE					?= 	client
 
 all: libft $(CLIENT) $(SERVER)
 
-bonus: libft clientbonus serverbonus
+bonus: libft $(CLIENT_BONUS) $(SERVER_BONUS)
 
 libft:
 	@make -C $(LIBFT)
@@ -73,6 +73,6 @@ norm:
 	@norminette $(SRCS_PATH) $(BONUS_PATH) $(LIBFT) $(HEADERS)
 
 val: all
-	valgrind --leak-check=full --suppressions=MLX42_suppressions ./$(EXE)
+	valgrind --leak-check=full --suppressions=MLX42_suppressions ./$(EXE) $(ARGS)
 
 .PHONY: all, clean, fclean, re, rebonus, norm, val

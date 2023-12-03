@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/01 20:40:42 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/03 19:45:17 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,13 @@
 
 void	handle_client_signal(int signum)
 {
-	static char	c;
-	static int	bits_read;
+	static unsigned char	c = 0;
+	static int				bits_read = 0;
 
+	c = c << 1;
 	if (signum == SIGUSR1)
-	{
 		c = c | 1;
-		c = c << 1;
-		bits_read++;
-	}
-	else if (signum == SIGUSR2)
-	{
-		c = c << 1;
-		bits_read++;
-	}
+	bits_read++;
 	if (bits_read == 8)
 	{
 		write(STDOUT_FILENO, &c, 1);
@@ -38,14 +31,12 @@ void	handle_client_signal(int signum)
 
 int	main(void)
 {
-	struct sigaction	sa;
-
 	ft_printf("Server PID: %d\n", getpid());
-	ft_bzero(&sa, sizeof(struct sigaction));
-	sa.sa_flags = SA_RESTART;
-	sa.sa_handler = &handle_client_signal;
-	if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
-		return (EXIT_FAILURE);
+	if (signal(SIGUSR1, handle_client_signal) == SIG_ERR || signal(SIGUSR2, handle_client_signal) == SIG_ERR)
+	{
+		perror("Signal");
+		exit(errno);
+	}
 	while (1)
 		pause();
 	return (EXIT_SUCCESS);
