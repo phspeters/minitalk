@@ -6,90 +6,84 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/04 22:23:57 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/05 19:26:26 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	handle_client_error(char *str)
+int	g_server_signal_received = 0;
+
+void	send_newline_to_server(int pid)
 {
-	if (str)
-		free (str);
-	exit(EXIT_FAILURE);
+	int	bit_index;
+
+	bit_index = 7;
+	while (bit_index >= 0)
+	{
+		g_server_signal_received = 0;
+		if (('\n' >> bit_index) & 1)
+			send_signal(pid, 1);
+		else
+			send_signal(pid, 0);
+		bit_index--;
+		while (!g_server_signal_received)
+			;
+	}
 }
 
-int	send_message_end(int pid, char *str)
+void	send_string_to_server(int pid, char *str)
 {
-	static int	bits_sent = 0;
-	static char	*end = "\n\0";
+	int		bit_index;
+	int		total_bits_sent;
 
-	if (bits_sent < 16)
+	total_bits_sent = 0;
+	while (*str)
 	{
-		if ((*end << (bits_sent % 8)) & 0b10000000)
+		bit_index = 7;
+		while (bit_index >= 0)
 		{
-			if (kill(pid, SIGUSR2) == -1)
-				handle_client_error(str);
+			g_server_signal_received = 0;
+			if ((*str >> bit_index) & 1)
+				send_signal(pid, 1);
+			else
+				send_signal(pid, 0);
+			bit_index--;
+			total_bits_sent++;
+			while (!g_server_signal_received)
+				;
 		}
-		else
-			if (kill(pid, SIGUSR1) == -1)
-				handle_client_error(str);
-		bits_sent++;
-		return (0);
+		str++;
 	}
-	return (bits_sent);
-}
-
-int	send_bit(int server_pid, char *str)
-{
-	static int	bits_sent = 0;
-	static char	*message;
-
-	if (str)
-		message = ft_strdup(str);
-	if (!message)
-		handle_client_error(message);
-	if (message[bits_sent / 8])
-	{
-		if ((message[bits_sent / 8] << (bits_sent % 8)) & 0b10000000)
-		{
-			if (kill(server_pid, SIGUSR2) == -1)
-				handle_client_error(message);
-		}
-		else
-			if (kill(server_pid, SIGUSR1) == -1)
-				handle_client_error(message);
-		bits_sent++;
-		return (0);
-	}
-	if (!send_message_end(server_pid, message))
-		return (0);
-	bits_sent += 16;
-	free(message);
-	exit(ft_printf("Sent %i bits (%i bytes) to server\n", bits_sent, (bits_sent / 8)));
+	send_newline_to_server(pid);
+	ft_printf("Total bits sent to server: %i bits (%i chars)\n", \
+	total_bits_sent, (total_bits_sent / 8));
 }
 
 void	handle_server_signal(int signum, siginfo_t *info, void *context)
 {
 	(void)context;
+	(void)info;
 	if (signum == SIGUSR1)
-		send_bit(info->si_pid, 0);
-	else if (signum == SIGUSR2)
-		handle_client_error(NULL);
+		g_server_signal_received = 1;
+	if (signum == SIGUSR2)
+		handle_error("Server ended unexpectedly");
 }
 
 int	main(int argc, char *argv[])
 {
 	struct sigaction	action;
+	int					server_pid;
 
 	if (argc != 3)
-		return (write(STDOUT_FILENO, "Correct usage: ./client 'Server PID' 'message'\n", 47));
-	ft_bzero(&action, sizeof(struct sigaction));
-	action.sa_flags = SA_RESTART | SA_SIGINFO;
-	action.sa_sigaction = &handle_server_signal;
-	if (sigaction(SIGUSR1, &action, NULL) == -1 || sigaction(SIGUSR2, &action, NULL) == -1)
-		return (write(STDOUT_FILENO, "Error setting up signal handler\n", 32));
-	send_bit(ft_atoi(argv[1]), argv[2]);
-	while (1)
-		pause();
+		handle_error("Correct usage: ./client 'Server PID' 'message'");
+	server_pid = ft_atoi(argv[1]);
+	if (kill(server_pid, 0) == -1)
+		handle_error("Cannot reach server");
+	setup_signal_handler(&action, handle_server_signal);
+	if (sigaction(SIGUSR1, &action, NULL) == -1 || \
+		sigaction(SIGUSR2, &action, NULL) == -1)
+		handle_error("Error setting up signal handler");
+	send_string_to_server(server_pid, argv[2]);
+	return (EXIT_SUCCESS);
 }

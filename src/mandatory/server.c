@@ -6,37 +6,40 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/03 19:45:17 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/05 19:27:56 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	handle_client_signal(int signum)
+void	handle_client_signal(int signum, siginfo_t *info, void *context)
 {
 	static unsigned char	c = 0;
 	static int				bits_read = 0;
 
+	(void)context;
 	c = c << 1;
-	if (signum == SIGUSR1)
-		c = c | 1;
 	bits_read++;
+	if (signum == SIGUSR2)
+		c = c | 1;
 	if (bits_read == 8)
 	{
 		write(STDOUT_FILENO, &c, 1);
-		bits_read = 0;
 		c = 0;
+		bits_read = 0;
 	}
+	send_signal(info->si_pid, CONFIRMATION);
 }
 
 int	main(void)
 {
+	struct sigaction	action;
+
+	setup_signal_handler(&action, handle_client_signal);
+	if (sigaction(SIGUSR1, &action, NULL) == -1 || \
+		sigaction(SIGUSR2, &action, NULL) == -1)
+		handle_error("Error setting up signal handler");
 	ft_printf("Server PID: %d\n", getpid());
-	if (signal(SIGUSR1, handle_client_signal) == SIG_ERR || signal(SIGUSR2, handle_client_signal) == SIG_ERR)
-	{
-		perror("Signal");
-		exit(errno);
-	}
 	while (1)
 		pause();
 	return (EXIT_SUCCESS);
