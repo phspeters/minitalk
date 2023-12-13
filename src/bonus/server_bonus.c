@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/05 20:16:53 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/13 11:48:45 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handle_client_signal(int signum, siginfo_t *info, void *context)
 	}
 	if (signum == SIGTERM || signum == SIGQUIT || signum == SIGINT)
 		handle_termination_signal(client_pid);
-	send_signal(client_pid, CONFIRMATION);
+	send_signal(client_pid, CONFIRMATION_SIGNAL);
 }
 
 int	main(void)
@@ -60,7 +60,9 @@ int	main(void)
 		sigaction(SIGINT, &action, NULL) == -1 || \
 		sigaction(SIGQUIT, &action, NULL) == -1 || \
 		sigaction(SIGTERM, &action, NULL) == -1)
+	{
 		handle_error("Error setting up signal handler");
+	}
 	ft_printf("Server PID: %i\n", getpid());
 	while (1)
 		pause();

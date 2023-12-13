@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:08:19 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/05 20:01:26 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/13 11:46:31 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdio.h>
 # include <errno.h>
 
-# define CONFIRMATION 0
+# define CONFIRMATION_SIGNAL 0
 
 void	handle_error(char *message);
 void	setup_signal_handler(struct sigaction *action, void (*func)(int signum,
