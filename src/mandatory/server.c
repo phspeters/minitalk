@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/14 15:57:52 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:42:35 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	handle_client_signal(int signum, siginfo_t *info, void *context)
 
 	(void)context;
 	c = c << 1;
-	bits_read++;
 	if (signum == SIGUSR2)
 		c = c | 1;
+	bits_read++;
 	if (bits_read == 8)
 	{
 		write(STDOUT_FILENO, &c, 1);

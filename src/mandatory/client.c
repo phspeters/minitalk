@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/05 19:28:05 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:45:25 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,7 @@ int	main(int argc, char *argv[])
 	if (argc != 3)
 		handle_error("Correct usage: ./client 'Server PID' 'message'");
 	setup_signal_handler(&action, handle_server_signal);
-	if (sigaction(SIGUSR1, &action, NULL) == -1 || \
-		sigaction(SIGUSR2, &action, NULL) == -1)
+	if (sigaction(SIGUSR1, &action, NULL) == -1)
 		handle_error("Error setting up signal handler");
 	server_pid = ft_atoi(argv[1]);
 	if (kill(server_pid, 0) == -1)
