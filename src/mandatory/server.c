@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/05 19:27:56 by pehenri2         ###   ########.fr       */
+/*   Updated: 2023/12/14 15:57:52 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	handle_client_signal(int signum, siginfo_t *info, void *context)
 		c = 0;
 		bits_read = 0;
 	}
-	send_signal(info->si_pid, CONFIRMATION);
+	send_signal(info->si_pid, CONFIRMATION_SIGNAL);
 }
 
 int	main(void)
