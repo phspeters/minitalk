@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/14 16:34:13 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/22 13:23:31 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	send_newline_to_server(int pid)
 	{
 		g_server_signal_received = 0;
 		if (('\n' >> bit_index) & 1)
-			send_signal(pid, 1);
+			send_signal(pid, BIT_ON);
 		else
-			send_signal(pid, 0);
+			send_signal(pid, BIT_OFF);
 		bit_index--;
 		while (!g_server_signal_received)
 			;
@@ -45,9 +45,9 @@ void	send_string_to_server(int pid, char *str)
 		{
 			g_server_signal_received = 0;
 			if ((*str >> bit_index) & 1)
-				send_signal(pid, 1);
+				send_signal(pid, BIT_ON);
 			else
-				send_signal(pid, 0);
+				send_signal(pid, BIT_OFF);
 			bit_index--;
 			total_bits_sent++;
 			while (!g_server_signal_received)
@@ -55,9 +55,9 @@ void	send_string_to_server(int pid, char *str)
 		}
 		str++;
 	}
-	send_newline_to_server(pid);
 	ft_printf("Total bits sent to server: %i bits (%i chars)\n", \
 	total_bits_sent, (total_bits_sent / 8));
+	send_newline_to_server(pid);
 }
 
 void	handle_server_signal(int signum, siginfo_t *info, void *context)
@@ -67,7 +67,10 @@ void	handle_server_signal(int signum, siginfo_t *info, void *context)
 	if (signum == SIGUSR1)
 		g_server_signal_received = 1;
 	if (signum == SIGUSR2)
-		handle_error("Server ended unexpectedly");
+	{
+		ft_printf("Communication successful: exiting client\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 int	main(int argc, char *argv[])

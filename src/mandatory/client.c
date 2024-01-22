@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2023/12/14 16:45:25 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/22 13:05:36 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	send_string_to_server(int pid, char *str)
 		{
 			g_server_signal_received = 0;
 			if ((*str >> bit_index) & 1)
-				send_signal(pid, 1);
+				send_signal(pid, BIT_ON);
 			else
-				send_signal(pid, 0);
+				send_signal(pid, BIT_OFF);
 			bit_index--;
 			while (!g_server_signal_received)
 				;
