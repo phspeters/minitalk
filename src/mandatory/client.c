@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/22 13:05:36 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:30:51 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	main(int argc, char *argv[])
 	if (sigaction(SIGUSR1, &action, NULL) == -1)
 		handle_error("Error setting up signal handler");
 	server_pid = ft_atoi(argv[1]);
-	if (kill(server_pid, 0) == -1)
+	if (kill(server_pid, 0) == -1 || server_pid == 0)
 		handle_error("Cannot reach server");
 	send_string_to_server(server_pid, argv[2]);
 	return (EXIT_SUCCESS);

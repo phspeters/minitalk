@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/22 13:23:31 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:31:34 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	main(int argc, char *argv[])
 	if (argc != 3)
 		handle_error("Correct usage: ./client 'Server PID' 'message'");
 	server_pid = ft_atoi(argv[1]);
-	if (kill(server_pid, 0) == -1)
+	if (kill(server_pid, 0) == -1 || server_pid == 0)
 		handle_error("Cannot reach server");
 	setup_signal_handler(&action, handle_server_signal);
 	if (sigaction(SIGUSR1, &action, NULL) == -1 || \
