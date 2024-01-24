@@ -6,7 +6,7 @@
 #    By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/02 09:58:30 by pehenri2          #+#    #+#              #
-#    Updated: 2023/12/05 19:46:32 by pehenri2         ###   ########.fr        #
+#    Updated: 2024/01/24 15:56:33 by pehenri2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,4 +81,4 @@ val: all bonus
          --log-file=valgrind-out.txt \
 		 ./$(EXE) $(PID) $(MSG)
 
-.PHONY: all, clean, fclean, re, rebonus, norm, val
+.PHONY: all, clean, fclean, re, norm, val

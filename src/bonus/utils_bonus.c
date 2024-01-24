@@ -6,11 +6,11 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:47:20 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/24 14:42:14 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:44:34 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 void	handle_error(char *message)
 {

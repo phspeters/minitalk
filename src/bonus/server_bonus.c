@@ -6,11 +6,11 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/22 13:22:21 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:53:04 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 int	g_total_bits_received = 0;
 
@@ -45,7 +45,7 @@ void	handle_client_signal(int signum, siginfo_t *info, void *context)
 		c = 0;
 		bits_read = 0;
 	}
-	if (signum == SIGTERM || signum == SIGQUIT || signum == SIGINT)
+	if (signum == SIGQUIT || signum == SIGINT)
 		handle_termination_signal();
 	send_signal(client_pid, CONFIRMATION_SIGNAL);
 }
@@ -58,8 +58,7 @@ int	main(void)
 	if (sigaction(SIGUSR1, &action, NULL) == -1 || \
 		sigaction(SIGUSR2, &action, NULL) == -1 || \
 		sigaction(SIGINT, &action, NULL) == -1 || \
-		sigaction(SIGQUIT, &action, NULL) == -1 || \
-		sigaction(SIGTERM, &action, NULL) == -1)
+		sigaction(SIGQUIT, &action, NULL) == -1)
 	{
 		handle_error("Error setting up signal handler");
 	}

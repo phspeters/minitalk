@@ -6,11 +6,11 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/24 15:37:58 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:44:29 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "minitalk_bonus.h"
 
 int	g_server_signal_received = 0;
 
