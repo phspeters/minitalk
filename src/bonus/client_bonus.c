@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/24 14:31:34 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:37:58 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	send_string_to_server(int pid, char *str)
 		}
 		str++;
 	}
-	ft_printf("Total bits sent to server: %i bits (%i chars)\n", \
+	ft_printf("\nTotal bits sent to server: %i bits (%i chars)\n", \
 	total_bits_sent, (total_bits_sent / 8));
 	send_newline_to_server(pid);
 }
