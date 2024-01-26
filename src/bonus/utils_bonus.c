@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:47:20 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/24 15:44:34 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/26 10:28:53 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,16 @@ void	setup_signal_handler(struct sigaction *action, void (*func)(int signum,
 	action->sa_sigaction = func;
 }
 
-int	send_signal(int pid, int signal)
+void	send_signal(int pid, int signal)
 {
-	if (signal == BIT_ON || signal == SIGUSR2)
+	if (signal == SIGUSR2)
 	{
 		if (kill(pid, SIGUSR2) == -1)
 			handle_error("Error sending signal");
 	}
-	else if (signal == BIT_OFF || signal == SIGUSR1)
+	else if (signal == SIGUSR1)
 	{
 		if (kill(pid, SIGUSR1) == -1)
 			handle_error("Error sending signal");
 	}
-	return (EXIT_SUCCESS);
 }

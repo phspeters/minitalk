@@ -6,7 +6,7 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/02 09:58:43 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/24 14:30:51 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/01/26 09:51:04 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	send_string_to_server(int pid, char *str)
 
 void	handle_server_signal(int signum, siginfo_t *info, void *context)
 {
-	(void)context;
 	(void)info;
+	(void)context;
 	if (signum == SIGUSR1)
 		g_server_signal_received = 1;
 }
@@ -51,12 +51,12 @@ int	main(int argc, char *argv[])
 
 	if (argc != 3)
 		handle_error("Correct usage: ./client 'Server PID' 'message'");
-	setup_signal_handler(&action, handle_server_signal);
-	if (sigaction(SIGUSR1, &action, NULL) == -1)
-		handle_error("Error setting up signal handler");
 	server_pid = ft_atoi(argv[1]);
 	if (kill(server_pid, 0) == -1 || server_pid == 0)
 		handle_error("Cannot reach server");
+	setup_signal_handler(&action, handle_server_signal);
+	if (sigaction(SIGUSR1, &action, NULL) == -1)
+		handle_error("Error setting up signal handler");
 	send_string_to_server(server_pid, argv[2]);
 	return (EXIT_SUCCESS);
 }
