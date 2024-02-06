@@ -6,14 +6,26 @@
 /*   By: pehenri2 <pehenri2@student.42sp.org.br     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 12:19:15 by pehenri2          #+#    #+#             */
-/*   Updated: 2024/01/26 10:08:25 by pehenri2         ###   ########.fr       */
+/*   Updated: 2024/02/06 19:50:14 by pehenri2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
+/**
+ * @brief Global variable to store the total bits received during runtime.
+ */
 int	g_total_bits_received = 0;
 
+/**
+ * @brief Function to handle the SIGINT (Ctrl+C) and SIGQUIT (Ctrl+\) signals.
+ * It prints the total bits received during runtime and exits the program with
+ * EXIT_SUCCESS status.
+ * 
+ * @param signum Signal number. In this case, SIGINT or SIGQUIT.
+ * @param info Not used in this function.
+ * @param context Not used in this project.
+ */
 void	handle_termination_signal(int signum, siginfo_t *info, void *context)
 {
 	(void)info;
@@ -26,6 +38,19 @@ bits (%i chars)\n", g_total_bits_received, (g_total_bits_received / 8));
 	}
 }
 
+/**
+ * @brief Handles the signal sent by the client. It reads the signal and decodes
+ * it in either a bit off (0) or bit on (1) and stores it in a static variable.
+ * After that, it sends a SIGUSR1 back to the client, as a confirmation signal
+ * indicating it's ready to receive the next signal.
+ * When 8 bits are read, it prints the character and resets the static variable,
+ * unless the character is a newline, in which case it sends a SIGUSR2 to the
+ * client to indicate that the exchange was successful.
+ * 
+ * @param signum The signal number. In this case, SIGUSR1 or SIGUSR2.
+ * @param info The signal information. Contains the client's process ID.
+ * @param context The signal context. Not used in this project.
+ */
 void	handle_client_signal(int signum, siginfo_t *info, void *context)
 {
 	static unsigned char	c;
@@ -51,6 +76,19 @@ void	handle_client_signal(int signum, siginfo_t *info, void *context)
 	send_signal(client_pid, CONFIRMATION_SIGNAL);
 }
 
+/**
+ * @brief The main function of the server program. It sets the action to be
+ * taken when a signal is received and installs the signal handler. It then
+ * prints it's PID and wait for signals until the process is stopped.
+ * 
+ * @param action The struct required by the sigaction function that will handle
+ * the SIGUSR1 and SIGUSR2 signals. It holds the function to be called when
+ * a specific signal is received as well as other information.
+ * @param termination The struct required by the sigaction function that will
+ * handle the SIGINT and SIGQUIT signals. It holds the function to be called when
+ * a specific signal is received as well as other information.
+ * @param handle_client_signal The function that will handle the signal.
+ */
 int	main(void)
 {
 	struct sigaction	client;
