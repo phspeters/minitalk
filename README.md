@@ -29,19 +29,19 @@ The purpose of this project is to code a small data exchange program using UNIX 
 
 ## 📋 Testing
 
-To compile, go to the project path and run:
+To compile, navigate to the project directory and run:
 
 ```shell
 $ make
 ```
 
-Start the "server," and note it's PID displayed on the terminal.
+Start the "server", it's PID will displayed on the terminal.
 
 ```shell
 $ ./server
 ```
 
-In a separate shell tab, launch the "client," providing the server's PID and your message string as arguments
+In a separate shell tab, launch the "client," providing the server's PID as your first argument and your message as second argument.
 
 ```shell
 $ ./client "PID" "Your message string"
